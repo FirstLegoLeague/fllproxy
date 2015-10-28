@@ -1,6 +1,14 @@
 {
 	"port":8000,
+	"appPath":"/path/to/fllscoring/localserver.js",
 	"contexts": {
-		"myregion": 1390
+		"myregion1": {
+			"port":1390,
+			"auth":"foo:bar"
+		},
+		"myregion2": {
+			"port":1391,
+			"auth":"qux:moo"
+		}
 	}
 }
