@@ -47,6 +47,9 @@ function createProxies(config) {
 
 var app = express(); 
     //create all proxies;
+    app.get('/:context$',function(req,res) {
+        res.redirect('/'+req.params.context+'/');
+    });
     proxies.forEach(function(proxy) {
         app.use(proxy);
     });
