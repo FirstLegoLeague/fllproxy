@@ -1,6 +1,6 @@
 {
-	"port":8000,
-	"appPath":"/path/to/fllscoring/localserver.js",
+	"port":80,
+	"appPath":"../fllscoring/localserver.js",
 	"contexts": {
 		"myregion1": {
 			"port":1390,

@@ -9,13 +9,17 @@ var children = spawnProcesses(config.contexts);
 var proxies = createProxies(config.contexts);
 
 function spawnProcesses(config) {
-    Object.keys(config).map(function(context) {
-        var port = config[context].port;
-        var auth = config[context].auth;
+    Object.keys(config).map(function(key) {
+        var processConf = config[key];
+        var port = processConf.port;
+        var args = ['-p',port,'-d',path.join('data',key)];
+        if (processConf.auth) {
+            args.push('-u',processConf.auth);
+        }
         var child = new (forever.Monitor)(appPath, {
             max: 3,
             silent: false,
-            args: ['-p',port,'-d',path.join('data',context)],
+            args: args,
             cwd: path.dirname(appPath),
         });
 
