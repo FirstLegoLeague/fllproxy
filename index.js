@@ -30,7 +30,7 @@ function spawnProcesses(config) {
 
 function createProxies(config) {
     return Object.keys(config).map(function(context) {
-        var port = config[context];
+        var port = config[context].port;
         var pathRewrite = {};
         pathRewrite['^/'+context] = '';
         return proxyMiddleware('/'+context, {
