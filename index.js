@@ -9,7 +9,7 @@ var children = spawnProcesses(config.contexts);
 var proxies = createProxies(config.contexts);
 
 function spawnProcesses(config) {
-    Object.keys(config).map(function(key) {
+    return Object.keys(config).map(function(key) {
         var processConf = config[key];
         var port = processConf.port;
         var args = ['-p',port,'-d',path.join('data',key)];
@@ -21,6 +21,7 @@ function spawnProcesses(config) {
             silent: false,
             args: args,
             cwd: path.dirname(appPath),
+            killTree: true
         });
 
         child.on('exit', function () {
@@ -54,3 +55,21 @@ var app = express();
         app.use(proxy);
     });
     app.listen(config.port);
+
+//exit handling, from http://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits
+function exitHandler(options, err) {
+    children.forEach(function(child) {
+        child.kill(true);
+    });
+    if (err) console.log(err.stack);
+    if (options && options.exit) process.exit();
+}
+
+//do something when app is closing
+process.on('exit', exitHandler);
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
