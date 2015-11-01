@@ -47,10 +47,13 @@ function createProxies(config) {
 }
 
 var app = express(); 
-    //create all proxies;
     app.get('/:context$',function(req,res) {
         res.redirect('/'+req.params.context+'/');
     });
+    app.get('/:context/admin/$',function(req,res) {
+        res.redirect('/'+req.params.context+'/admin');
+    });
+    //create all proxies;
     proxies.forEach(function(proxy) {
         app.use(proxy);
     });
