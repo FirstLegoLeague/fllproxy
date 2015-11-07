@@ -25,7 +25,7 @@ function spawnProcesses(config) {
         });
 
         child.on('exit', function () {
-            console.log('child for region',context,'has exited after 3 restarts. Port',port);
+            console.log('child for region',key,'has exited. Port',port);
         });
 
         child.start();
@@ -61,18 +61,28 @@ var app = express();
 
 //exit handling, from http://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits
 function exitHandler(options, err) {
+    console.log(options.sig);
     children.forEach(function(child) {
-        child.kill(true);
+	if (child.running) {
+	        child.kill(true);
+	}
     });
     if (err) console.log(err.stack);
-    if (options && options.exit) process.exit();
+    if (options && options.exit) {
+	setTimeout(function() {
+		process.exit();
+	},100);
+    }
 }
 
 //do something when app is closing
-process.on('exit', exitHandler);
+process.on('exit', exitHandler.bind(null, {sig:'exit'}));
 
 //catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+process.on('SIGINT', exitHandler.bind(null, {exit:true,sig:'SIGINT'}));
+
+//catches sigterm
+process.on('SIGTERM', exitHandler.bind(null, {exit:true,sig:'SIGTERM'}));
 
 //catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+process.on('uncaughtException', exitHandler.bind(null, {exit:true,sig:'exception'}));
