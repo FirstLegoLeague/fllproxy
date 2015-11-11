@@ -12,7 +12,7 @@ function spawnProcesses(config) {
     return Object.keys(config).map(function(key) {
         var processConf = config[key];
         var port = processConf.port;
-        var args = ['-p',port,'-d',path.join('data',key)];
+        var args = ['-s','-p',port,'-d',path.join('data',key)];
         if (processConf.auth) {
             args.push('-u',processConf.auth);
         }
