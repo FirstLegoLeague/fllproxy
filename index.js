@@ -21,7 +21,8 @@ function spawnProcesses(config) {
             silent: false,
             args: args,
             cwd: path.dirname(appPath),
-            killTree: true
+            killTree: true,
+            killSignal: 'SIGTERM'
         });
 
         child.on('exit', function () {
